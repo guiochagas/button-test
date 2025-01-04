@@ -23,15 +23,55 @@
 </head>
 <body>
     <div class="container">
-        <h2>{{ message }}</h2>  <!-- Exibe a mensagem -->
-        
-        <!-- Formulário com botão -->
-        <form method="POST">
-            <button type="submit" class="btn btn-primary btn-lg">Clique Aqui</button>
-        </form>
+        <h2 id="message">{{ message }}</h2>  <!-- Exibe a mensagem com ID para manipulação -->
+
+        <!-- Botão com classe inicial 'btn-primary' -->
+        <button id="clickButton" class="btn btn-primary btn-lg">Clique Aqui</button>
     </div>
 
-    <!-- Incluindo o JS do Bootstrap -->
+    <!-- Incluindo o JS do Bootstrap e nosso próprio JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Incluindo jQuery -->
+
+    <script>
+        // Função que altera a mensagem após o clique e alterna a cor do botão
+        document.getElementById('clickButton').addEventListener('click', function() {
+            // Alterando a mensagem para "Você clicou no botão!"
+            document.getElementById('message').innerText = "Você clicou no botão!";
+            
+            // Aguardando 1 segundo (1000ms) para voltar à mensagem original
+            setTimeout(function() {
+                document.getElementById('message').innerText = "Clique no botão!";
+            }, 1000);
+
+            // Alternando a cor do botão
+            const button = document.getElementById('clickButton');
+            if (button.classList.contains('btn-primary')) {
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-success');
+            } else if (button.classList.contains('btn-success')) {
+                button.classList.remove('btn-success');
+                button.classList.add('btn-danger');
+            } else if (button.classList.contains('btn-danger')) {
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-warning');
+            } else if (button.classList.contains('btn-warning')) {
+                button.classList.remove('btn-warning');
+                button.classList.add('btn-primary');
+            }
+
+            // Enviando uma requisição AJAX para o backend
+            $.ajax({
+                url: '/click',  // Rota do servidor onde o clique é registrado
+                method: 'POST',  // Enviando como POST
+                success: function(response) {
+                    // Não exibimos mais a resposta do servidor no frontend
+                },
+                error: function() {
+                    // Não mostramos mensagem de erro
+                }
+            });
+        });
+    </script>
 </body>
 </html>
